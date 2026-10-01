@@ -1,0 +1,219 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - link "Skip to main content" [ref=f2e3] [cursor=pointer]:
+      - /url: "#vp-main"
+    - banner [ref=f2e4]:
+      - link "VibePlan home" [ref=f2e5] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=f2e9]: VibePlan
+        - generic [ref=f2e10]: by zuroDev
+      - generic [ref=f2e11]: AI Project Architect
+    - navigation "Primary navigation" [ref=f2e13]:
+      - generic [ref=f2e15]:
+        - paragraph [ref=f2e16]: General
+        - list [ref=f2e17]:
+          - listitem [ref=f2e18]:
+            - link "Dashboard" [ref=f2e19] [cursor=pointer]:
+              - /url: /dashboard
+          - listitem [ref=f2e22]:
+            - link "Projects" [ref=f2e23] [cursor=pointer]:
+              - /url: /projects
+      - generic [ref=f2e26]:
+        - link "Design system (dev)" [ref=f2e27] [cursor=pointer]:
+          - /url: /design-system
+        - button "Sign out" [ref=f2e28] [cursor=pointer]
+    - main [ref=f2e29]:
+      - generic [ref=f2e30]:
+        - navigation "Breadcrumb" [ref=f2e31]:
+          - link "Dashboard" [ref=f2e32] [cursor=pointer]:
+            - /url: /dashboard
+          - generic [aria-hidden] [ref=f2e33]: /
+          - generic [ref=f2e34]: Design System
+        - generic [ref=f2e36]:
+          - paragraph [ref=f2e37]: Internal · Development only
+          - heading "VibePlan Design System" [level=1] [ref=f2e38]
+          - paragraph [ref=f2e39]: Reference for the reusable tokens and component classes used across the product. This page is only available in development builds.
+        - region [ref=f2e40]:
+          - heading "Brand" [level=2] [ref=f2e41]
+          - generic [ref=f2e42]:
+            - generic [ref=f2e43]:
+              - generic [ref=f2e44]:
+                - img "VibePlan mark" [ref=f2e45]
+                - generic [ref=f2e46]: VibePlan
+              - generic [ref=f2e47]:
+                - img "VibePlan mark (dark)" [ref=f2e48]
+                - generic [ref=f2e49]: VibePlan
+              - img "VibePlan logo" [ref=f2e50]
+            - paragraph [ref=f2e51]: "Product: VibePlan by zuroDev · AI Project Architect · “From Idea to Implementation.”"
+        - region [ref=f2e52]:
+          - heading "Color tokens" [level=2] [ref=f2e53]
+          - generic [ref=f2e55]:
+            - generic [ref=f2e58]:
+              - generic [ref=f2e59]: Primary
+              - code [ref=f2e60]: "--color-primary"
+            - generic [ref=f2e63]:
+              - generic [ref=f2e64]: Primary light
+              - code [ref=f2e65]: "--color-primary-light"
+            - generic [ref=f2e68]:
+              - generic [ref=f2e69]: Primary dark
+              - code [ref=f2e70]: "--color-primary-dark"
+            - generic [ref=f2e73]:
+              - generic [ref=f2e74]: Accent
+              - code [ref=f2e75]: "--color-accent"
+            - generic [ref=f2e78]:
+              - generic [ref=f2e79]: Background
+              - code [ref=f2e80]: "--color-background"
+            - generic [ref=f2e83]:
+              - generic [ref=f2e84]: Surface
+              - code [ref=f2e85]: "--color-surface"
+            - generic [ref=f2e88]:
+              - generic [ref=f2e89]: Surface elevated
+              - code [ref=f2e90]: "--color-surface-elevated"
+            - generic [ref=f2e93]:
+              - generic [ref=f2e94]: Border
+              - code [ref=f2e95]: "--color-border"
+            - generic [ref=f2e98]:
+              - generic [ref=f2e99]: Foreground
+              - code [ref=f2e100]: "--color-foreground"
+            - generic [ref=f2e103]:
+              - generic [ref=f2e104]: Text secondary
+              - code [ref=f2e105]: "--color-text-secondary"
+            - generic [ref=f2e108]:
+              - generic [ref=f2e109]: Success
+              - code [ref=f2e110]: "--color-success"
+            - generic [ref=f2e113]:
+              - generic [ref=f2e114]: Warning
+              - code [ref=f2e115]: "--color-warning"
+            - generic [ref=f2e118]:
+              - generic [ref=f2e119]: Danger
+              - code [ref=f2e120]: "--color-danger"
+            - generic [ref=f2e123]:
+              - generic [ref=f2e124]: Info
+              - code [ref=f2e125]: "--color-info"
+        - region [ref=f2e126]:
+          - heading "Typography" [level=2] [ref=f2e127]
+          - generic [ref=f2e128]:
+            - generic [ref=f2e129]:
+              - generic [ref=f2e130]: Display · --text-display
+              - generic [ref=f2e131]: The quick brown fox — 0123456789
+            - generic [ref=f2e132]:
+              - generic [ref=f2e133]: Page title · --text-page-title
+              - generic [ref=f2e134]: The quick brown fox — 0123456789
+            - generic [ref=f2e135]:
+              - generic [ref=f2e136]: Section title · --text-section-title
+              - generic [ref=f2e137]: The quick brown fox — 0123456789
+            - generic [ref=f2e138]:
+              - generic [ref=f2e139]: Card title · --text-card-title
+              - generic [ref=f2e140]: The quick brown fox — 0123456789
+            - generic [ref=f2e141]:
+              - generic [ref=f2e142]: Body · --text-body
+              - generic [ref=f2e143]: The quick brown fox — 0123456789
+            - generic [ref=f2e144]:
+              - generic [ref=f2e145]: Body small · --text-body-small
+              - generic [ref=f2e146]: The quick brown fox — 0123456789
+            - generic [ref=f2e147]:
+              - generic [ref=f2e148]: Caption · --text-caption
+              - generic [ref=f2e149]: The quick brown fox — 0123456789
+            - generic [ref=f2e150]:
+              - generic [ref=f2e151]: Code · --text-code
+              - generic [ref=f2e152]: The quick brown fox — 0123456789
+        - region [ref=f2e153]:
+          - heading "Buttons" [level=2] [ref=f2e154]
+          - generic [ref=f2e155]:
+            - generic [ref=f2e156]:
+              - button "Primary" [ref=f2e157] [cursor=pointer]
+              - button "Secondary" [ref=f2e158] [cursor=pointer]
+              - button "Accent" [ref=f2e159] [cursor=pointer]
+              - button "Danger" [ref=f2e160] [cursor=pointer]
+              - button "Ghost" [ref=f2e161] [cursor=pointer]
+            - generic [ref=f2e162]:
+              - button "Small" [ref=f2e163] [cursor=pointer]
+              - button "Default" [ref=f2e164] [cursor=pointer]
+              - button "Large" [ref=f2e165] [cursor=pointer]
+              - button "Disabled" [disabled] [ref=f2e166]
+        - region [ref=f2e167]:
+          - heading "Inputs" [level=2] [ref=f2e168]
+          - generic [ref=f2e170]:
+            - generic [ref=f2e171]:
+              - generic [ref=f2e172]: Project name
+              - textbox "Project name" [ref=f2e173]:
+                - /placeholder: e.g. Inventory API
+              - generic [ref=f2e174]: Visible to project members.
+            - generic [ref=f2e175]:
+              - generic [ref=f2e176]: Description
+              - textbox "Description" [ref=f2e177]:
+                - /placeholder: Short summary…
+            - generic [ref=f2e178]:
+              - generic [ref=f2e179]: Status
+              - combobox "Status" [ref=f2e180]:
+                - option "Active" [selected]
+                - option "Archived"
+        - region [ref=f2e181]:
+          - heading "Badges" [level=2] [ref=f2e182]
+          - generic [ref=f2e184]:
+            - generic [ref=f2e185]: Not started
+            - generic [ref=f2e186]: Draft
+            - generic [ref=f2e187]: In review
+            - generic [ref=f2e188]: Approved
+            - generic [ref=f2e189]: Completed
+            - generic [ref=f2e190]: Blocked
+            - generic [ref=f2e191]: Success
+            - generic [ref=f2e192]: Warning
+            - generic [ref=f2e193]: Danger
+            - generic [ref=f2e194]: Info
+        - region [ref=f2e195]:
+          - heading "Cards" [level=2] [ref=f2e196]
+          - article [ref=f2e199]:
+            - generic [ref=f2e200]:
+              - heading "Example project" [level=3] [ref=f2e201]
+              - generic [ref=f2e202]: Active
+            - paragraph [ref=f2e203]: Card body copy demonstrates description clamping and metadata spacing used on the dashboard.
+            - generic [ref=f2e204]:
+              - generic [ref=f2e205]: Updated just now
+              - generic [ref=f2e206] [cursor=pointer]: Open project →
+        - region [ref=f2e207]:
+          - heading "Alerts" [level=2] [ref=f2e208]
+          - generic [ref=f2e210]:
+            - generic [ref=f2e211]: Informational message.
+            - generic [ref=f2e212]: Operation succeeded.
+            - generic [ref=f2e213]: Review recommended.
+            - generic [ref=f2e214]: Action failed.
+        - region [ref=f2e215]:
+          - heading "Tabs" [level=2] [ref=f2e216]
+          - tablist "Example tabs" [ref=f2e218]:
+            - tab "Document" [selected] [ref=f2e219] [cursor=pointer]
+            - tab "AI Review" [ref=f2e220] [cursor=pointer]
+            - tab "Decisions" [ref=f2e221] [cursor=pointer]
+        - region [ref=f2e222]:
+          - heading "Dialog" [level=2] [ref=f2e223]
+          - generic [ref=f2e226]:
+            - heading "Approve document?" [level=2] [ref=f2e228]
+            - generic [ref=f2e229]: Approval locks the current draft as the baseline for the next pipeline stage.
+            - generic [ref=f2e230]:
+              - button "Cancel" [ref=f2e231] [cursor=pointer]
+              - button "Approve" [ref=f2e232] [cursor=pointer]
+        - region [ref=f2e233]:
+          - heading "Table" [level=2] [ref=f2e234]
+          - table [ref=f2e237]:
+            - rowgroup [ref=f2e238]:
+              - row [ref=f2e239]:
+                - columnheader "Document" [ref=f2e240]
+                - columnheader "Status" [ref=f2e241]
+                - columnheader "Updated" [ref=f2e242]
+            - rowgroup [ref=f2e243]:
+              - row [ref=f2e244]:
+                - cell "Requirements" [ref=f2e245]
+                - cell "Approved" [ref=f2e246]
+                - cell "2026-09-30" [ref=f2e248]
+              - row [ref=f2e249]:
+                - cell "Architecture" [ref=f2e250]
+                - cell "In review" [ref=f2e251]
+                - cell "2026-09-30" [ref=f2e253]
+        - region [ref=f2e254]:
+          - heading "Empty & loading states" [level=2] [ref=f2e255]
+          - generic [ref=f2e258]:
+            - heading "Nothing here yet" [level=3] [ref=f2e259]
+            - paragraph [ref=f2e260]: Empty states explain what will appear and offer a next action.
+            - generic [ref=f2e261] [cursor=pointer]: Create item
+  - button "Open Next.js Dev Tools" [ref=f2e271] [cursor=pointer]
+  - alert [ref=f2e275]

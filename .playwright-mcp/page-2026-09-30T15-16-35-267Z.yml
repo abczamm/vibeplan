@@ -1,0 +1,28 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - link "Skip to main content" [ref=f3e3] [cursor=pointer]:
+      - /url: "#vp-main"
+    - banner [ref=f3e4]:
+      - button "Open navigation menu" [ref=f3e5] [cursor=pointer]
+      - link "VibePlan home" [ref=f3e8] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=f3e12]: VibePlan
+    - navigation "Primary navigation" [ref=f3e13]:
+      - generic [ref=f3e15]:
+        - paragraph [ref=f3e16]: General
+        - list [ref=f3e17]:
+          - listitem [ref=f3e18]:
+            - link "Dashboard" [ref=f3e19] [cursor=pointer]:
+              - /url: /dashboard
+          - listitem [ref=f3e22]:
+            - link "Projects" [ref=f3e23] [cursor=pointer]:
+              - /url: /projects
+      - generic [ref=f3e26]:
+        - link "Design system (dev)" [ref=f3e27] [cursor=pointer]:
+          - /url: /design-system
+        - button "Sign out" [ref=f3e28] [cursor=pointer]
+    - main [ref=f3e29]:
+      - status [ref=f3e30]:
+        - paragraph [ref=f3e35]: Loading VibePlan…
+  - button "Open Next.js Dev Tools" [ref=f3e41] [cursor=pointer]
+  - alert [ref=f3e45]

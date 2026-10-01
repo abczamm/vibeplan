@@ -1,0 +1,366 @@
+/* VibePlan Design System - CSS Variables & Tokens */
+
+/* ============================================
+   BRAND & IDENTITY
+   ============================================ */
+
+:root {
+  /* Product */
+  --product-name: "VibePlan";
+  --product-tagline: "From Idea to Implementation.";
+  --brand-by: "VibePlan by zuroDev";
+
+  /* ============================================
+     COLOR SYSTEM - Light Mode
+     ============================================ */
+
+  /* Neutral / Surface Colors */
+  --color-background: #ffffff;
+  --color-foreground: #0f0f0f;
+  --color-surface: #f8f8f8;
+  --color-surface-muted: #f0f0f0;
+  --color-surface-elevated: #ffffff;
+  --color-border: #e5e5e5;
+  --color-border-subtle: #f0f0f0;
+
+  /* Primary - Navy / Deep Blue */
+  --color-primary: #1e3a5f;
+  --color-primary-light: #2d5a8c;
+  --color-primary-dark: #15263e;
+  --color-primary-foreground: #ffffff;
+
+  /* Accent - Controlled Orange */
+  --color-accent: #ea7a3d;
+  --color-accent-light: #f39160;
+  --color-accent-dark: #d96826;
+  --color-accent-foreground: #ffffff;
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-success-light: #34d399;
+  --color-success-dark: #059669;
+  --color-success-foreground: #ffffff;
+
+  --color-warning: #f59e0b;
+  --color-warning-light: #fbbf24;
+  --color-warning-dark: #d97706;
+  --color-warning-foreground: #ffffff;
+
+  --color-danger: #ef4444;
+  --color-danger-light: #f87171;
+  --color-danger-dark: #dc2626;
+  --color-danger-foreground: #ffffff;
+
+  --color-info: #3b82f6;
+  --color-info-light: #60a5fa;
+  --color-info-dark: #1d4ed8;
+  --color-info-foreground: #ffffff;
+
+  /* Text & Muted */
+  --color-text-primary: #0f0f0f;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-muted: #cccccc;
+  --color-muted: #888888;
+  --color-muted-foreground: #666666;
+
+  /* ============================================
+     DARK MODE OVERRIDES
+     ============================================ */
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0f0f0f;
+    --color-foreground: #ffffff;
+    --color-surface: #1a1a1a;
+    --color-surface-muted: #262626;
+    --color-surface-elevated: #2a2a2a;
+    --color-border: #333333;
+    --color-border-subtle: #262626;
+
+    --color-primary: #60a5fa;
+    --color-primary-light: #93c5fd;
+    --color-primary-dark: #1e3a8a;
+    --color-primary-foreground: #0f0f0f;
+
+    --color-accent: #f97316;
+    --color-accent-light: #fb923c;
+    --color-accent-dark: #c2410c;
+    --color-accent-foreground: #0f0f0f;
+
+    --color-success: #10b981;
+    --color-success-light: #34d399;
+    --color-success-dark: #047857;
+    --color-success-foreground: #0f0f0f;
+
+    --color-warning: #fbbf24;
+    --color-warning-light: #fcd34d;
+    --color-warning-dark: #b45309;
+    --color-warning-foreground: #0f0f0f;
+
+    --color-danger: #f87171;
+    --color-danger-light: #fca5a5;
+    --color-danger-dark: #991b1b;
+    --color-danger-foreground: #0f0f0f;
+
+    --color-info: #60a5fa;
+    --color-info-light: #93c5fd;
+    --color-info-dark: #1d4ed8;
+    --color-info-foreground: #0f0f0f;
+
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #d4d4d4;
+    --color-text-tertiary: #888888;
+    --color-text-muted: #666666;
+    --color-muted: #888888;
+    --color-muted-foreground: #999999;
+
+    color-scheme: dark;
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY SYSTEM
+   ============================================ */
+
+:root {
+  /* Font Families */
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), "Menlo", "Monaco", "Courier New",
+    monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
+}
+
+/* Typography Scales */
+:root {
+  /* Display - Hero text */
+  --text-display: var(--font-size-4xl) / var(--line-height-tight)
+    var(--font-weight-bold);
+
+  /* Page Title */
+  --text-page-title: var(--font-size-3xl) / var(--line-height-tight)
+    var(--font-weight-bold);
+
+  /* Section Title */
+  --text-section-title: var(--font-size-2xl) / var(--line-height-tight)
+    var(--font-weight-semibold);
+
+  /* Card Title / Subsection */
+  --text-card-title: var(--font-size-lg) / var(--line-height-normal)
+    var(--font-weight-semibold);
+
+  /* Body / Default */
+  --text-body: var(--font-size-base) / var(--line-height-normal)
+    var(--font-weight-regular);
+
+  /* Body Small */
+  --text-body-small: var(--font-size-sm) / var(--line-height-normal)
+    var(--font-weight-regular);
+
+  /* Caption / Helper text */
+  --text-caption: var(--font-size-xs) / var(--line-height-normal)
+    var(--font-weight-regular);
+
+  /* Label / Form labels */
+  --text-label: var(--font-size-sm) / var(--line-height-normal)
+    var(--font-weight-semibold);
+
+  /* Code / Technical text */
+  --text-code: var(--font-size-sm) / var(--line-height-normal)
+    var(--font-weight-regular);
+}
+
+/* ============================================
+   SPACING SYSTEM (8px base)
+   ============================================ */
+
+:root {
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+  --space-24: 6rem; /* 96px */
+}
+
+/* ============================================
+   RADIUS SYSTEM
+   ============================================ */
+
+:root {
+  --radius-none: 0;
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-base: 0.5rem; /* 8px */
+  --radius-md: 0.75rem; /* 12px */
+  --radius-lg: 1rem; /* 16px */
+  --radius-full: 9999px;
+}
+
+/* ============================================
+   SHADOW SYSTEM
+   ============================================ */
+
+:root {
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark mode shadow adjustments */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ============================================
+   BORDER SYSTEM
+   ============================================ */
+
+:root {
+  --border-width-0: 0;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+}
+
+/* ============================================
+   ANIMATION & TRANSITIONS
+   ============================================ */
+
+:root {
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-ease-out: cubic-bezier(0.4, 0, 1, 1);
+  --easing-ease-in: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* ============================================
+   GLOBAL DEFAULTS
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-regular);
+  transition: background-color var(--duration-base) var(--easing-ease-in-out),
+    color var(--duration-base) var(--easing-ease-in-out);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   FOCUS STATES (Accessibility)
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   UTILITY: Skip to content link
+   ============================================ */
+
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  padding: var(--space-2) var(--space-4);
+  z-index: 100;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VibePlan Logo Mark - Geometric V + Plan concept -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Mark: Geometric V shape representing Vision/Plan, with flow lines -->
+  <g>
+    <!-- V shape (primary) -->
+    <path
+      d="M 16 12 L 32 44 L 48 12"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Flow indicator dots (representing flow/architecture) -->
+    <circle cx="32" cy="52" r="2" fill="currentColor" />
+    <circle cx="26" cy="56" r="1.5" fill="currentColor" opacity="0.6" />
+    <circle cx="38" cy="56" r="1.5" fill="currentColor" opacity="0.6" />
+  </g>
+</svg>

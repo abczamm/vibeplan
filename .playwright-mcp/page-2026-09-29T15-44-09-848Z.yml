@@ -1,0 +1,18 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - heading "Login to VibePlan" [level=1] [ref=f1e3]
+    - generic [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - text: Email
+        - textbox "Email" [ref=f1e6]: test@vibeplan.com
+      - generic [ref=f1e7]:
+        - text: Password
+        - textbox "Password" [ref=f1e8]: password123
+      - alert [ref=f1e22]: Invalid login credentials
+      - button "Sign in" [ref=f1e9]
+    - paragraph [ref=f1e10]:
+      - text: Don't have an account?
+      - link "Create account" [ref=f1e11] [cursor=pointer]:
+        - /url: /register
+  - button "Open Next.js Dev Tools" [ref=f1e17] [cursor=pointer]
+  - alert [ref=f1e21]

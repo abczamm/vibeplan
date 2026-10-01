@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VibePlan Horizontal Logo - Mark + Wordmark -->
+<svg viewBox="0 0 240 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Mark -->
+  <g>
+    <path
+      d="M 16 12 L 32 44 L 48 12"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="32" cy="52" r="2" fill="currentColor" />
+  </g>
+  
+  <!-- Wordmark -->
+  <g fill="currentColor" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" letter-spacing="-0.5px">
+    <text x="64" y="42">VibePlan</text>
+  </g>
+</svg>

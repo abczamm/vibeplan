@@ -1,0 +1,20 @@
+- generic [active] [ref=f7e1]:
+  - main [ref=f7e3]:
+    - generic [ref=f7e4]:
+      - generic [ref=f7e5]: VibePlan
+      - heading "Sign in" [level=1] [ref=f7e10]
+      - paragraph [ref=f7e11]: Your AI Project Architect — from idea to implementation.
+      - generic [ref=f7e12]:
+        - generic [ref=f7e13]:
+          - generic [ref=f7e14]: Email
+          - textbox "Email" [ref=f7e15]
+        - generic [ref=f7e16]:
+          - generic [ref=f7e17]: Password
+          - textbox "Password" [ref=f7e18]
+        - button "Sign in" [ref=f7e19] [cursor=pointer]
+      - paragraph [ref=f7e20]:
+        - text: Don't have an account?
+        - link "Create account" [ref=f7e21] [cursor=pointer]:
+          - /url: /register
+  - button "Open Next.js Dev Tools" [ref=f7e27] [cursor=pointer]
+  - alert [ref=f7e31]
