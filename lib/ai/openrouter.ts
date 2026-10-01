@@ -1,3 +1,4 @@
+import { CodingAgentResponse, CodingAgentResponseSchema } from "./coding-agent";
 import type {
   AIProvider,
   DiscoveryAIResponse,
@@ -5984,4 +5985,102 @@ Identify issues according to the provided schema.`;
     return result.data;
   }
 
+  async generateCodingAgentImplementation(input: {
+    projectName: string;
+    task: Record<string, unknown>;
+    agentPackage: Record<string, unknown>;
+    designSystem: Record<string, unknown>;
+    requirements: Record<string, unknown>;
+    architecture: Record<string, unknown>;
+    erd: Record<string, unknown>;
+    dfd: Record<string, unknown>;
+    flowchart: Record<string, unknown>;
+    blueprint: Record<string, unknown>;
+    workspaceFiles: Record<string, unknown>[];
+    previousError?: string;
+  }): Promise<CodingAgentResponse> {
+    const systemPrompt = `You are VibePlan Coding Agent. 
+You execute implementation tasks strictly based on the provided Agent Package, Design System, and Engineering Plan.
+You MUST output strictly in JSON according to the required schema.
+
+## REQUIRED SCHEMA
+${JSON.stringify(
+  {
+    decision: "implement | pause | request_human",
+    summary: "Brief summary of what you did",
+    changes: [
+      {
+        path: "relative/path/to/file",
+        operation: "create | modify | delete",
+        content: "File content (optional for delete)",
+        reason: "Reason for change",
+        task_id: "task_id"
+      }
+    ],
+    validation_requirements: ["list of validation commands or checks needed"],
+    uncertainty: "Description of any uncertainty (optional)",
+    human_intervention: "Reason for human intervention (optional)"
+  },
+  null,
+  2
+)}
+
+## CONTEXT
+Project: ${input.projectName}
+Task: ${JSON.stringify(input.task, null, 2)}
+Agent Package Rules: ${JSON.stringify(input.agentPackage, null, 2)}
+Design System relevant section: ${JSON.stringify(input.designSystem, null, 2)}
+Workspace Files provided: ${input.workspaceFiles.map(f => f.path).join(", ")}
+
+## FILE CONTENTS
+${input.workspaceFiles.map(f => `--- ${f.path} ---\n${f.content || "<binary/empty>"}`).join("\n\n")}
+
+${input.previousError ? `## PREVIOUS ERROR\n${input.previousError}` : ""}
+
+Do not output anything outside the JSON object. Do not wrap in markdown tags if possible, but if you do, the system will parse it.`;
+
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    const model = process.env.OPENROUTER_MODEL;
+
+    if (!apiKey) {
+      throw new Error("OPENROUTER_API_KEY is not configured.");
+    }
+
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://vibeplan.ai",
+        "X-Title": "VibePlan",
+      },
+      body: JSON.stringify({
+        model: model || "anthropic/claude-3.5-sonnet",
+        messages: [{ role: "system", content: systemPrompt }],
+        response_format: { type: "json_object" },
+        temperature: 0.2,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`OpenRouter API error: ${res.status}`);
+    }
+
+    const json = await res.json();
+    let content = json.choices?.[0]?.message?.content;
+    
+    // Strip markdown JSON block if present
+    if (content.startsWith("\`\`\`json")) {
+      content = content.replace(/^\`\`\`json\s*/, "").replace(/\s*\`\`\`$/, "");
+    }
+    
+    const parsed = JSON.parse(content);
+    const result = CodingAgentResponseSchema.safeParse(parsed);
+    
+    if (!result.success) {
+      throw new Error("Invalid AI output schema");
+    }
+
+    return result.data;
+  }
 }

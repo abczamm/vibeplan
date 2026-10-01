@@ -100,6 +100,9 @@ import type {
   DesignSystemApprovalResult
 } from "./design-system";
 export type { DesignPrinciple, DesignTokens, TypographySystem, ColorSystem, SpacingSystem, RadiusSystem, ElevationSystem, ComponentSystem, LayoutRules, ResponsiveRules, NavigationSystem, PagePattern, FormPattern, TablePattern, FeedbackStateSystem, AccessibilityRule, InteractionRules, ScreenSpecification, DesignTraceability, DesignSystemMetadata, DesignSystemDocument, DesignSystemReviewSeverity, DesignSystemReviewCategory, DesignSystemReviewIssue, DesignSystemReview, DesignSystemReviewDecisionAction, DesignSystemReviewDecision, DesignSystemUpstreamContext, DesignSystemValidationIssue, DesignSystemValidationResult, DesignSystemApprovalInput, DesignSystemApprovalResult };
+
+import type { CodingAgentResponse, WorkspaceFile } from "./coding-agent";
+
 import type {
   PhaseKind,
   TaskPriority,
@@ -819,6 +822,21 @@ export interface AIProvider {
     designSystemDoc: DesignSystemDocument;
     planDoc: EngineeringPlanDocument;
   }): Promise<EngineeringReview>;
+
+  generateCodingAgentImplementation(input: {
+    projectName: string;
+    task: ImplementationTask;
+    agentPackage: AgentPackageDocument;
+    designSystem: DesignSystemDocument;
+    requirements: RequirementsDraft;
+    architecture: ArchitectureDocument;
+    erd: ERDDocument;
+    dfd: DFDDocument;
+    flowchart: FlowchartDocument;
+    blueprint: ImplementationBlueprint;
+    workspaceFiles: WorkspaceFile[];
+    previousError?: string;
+  }): Promise<CodingAgentResponse>;
 }
 
 export type FlowchartReviewSeverity = "important" | "minor";

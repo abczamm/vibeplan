@@ -111,3 +111,13 @@ export const CodingAgentStepSchema = z.object({
   task_id: z.string(),
 });
 export type CodingAgentStep = z.infer<typeof CodingAgentStepSchema>;
+
+export const CodingAgentResponseSchema = z.object({
+  decision: z.enum(["implement", "pause", "request_human"]),
+  summary: z.string(),
+  changes: z.array(CodingAgentStepSchema),
+  validation_requirements: z.array(z.string()),
+  uncertainty: z.string().optional(),
+  human_intervention: z.string().optional(),
+});
+export type CodingAgentResponse = z.infer<typeof CodingAgentResponseSchema>;
