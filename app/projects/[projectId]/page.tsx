@@ -26,6 +26,7 @@ const PHASE_STEPS = [
   { key: "design_system", label: "Design System" },
   { key: "engineering_plan", label: "Engineering Plan" },
   { key: "coding_agent", label: "Coding Agent Engine" },
+  { key: "human_merge", label: "Review & Merge" },
 ];
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -381,10 +382,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 primary: !codingAgentStatus || codingAgentStatus === "created" || codingAgentStatus === "paused",
               }
             : undefined,
-          hint: !engineeringPlanApproved ? "Requires approved Engineering Plan" : undefined,
-        };
-      default:
-        return { done: false };
+            hint: !engineeringPlanApproved ? "Requires approved Engineering Plan" : undefined,
+          };
+        case "human_merge":
+          return {
+            done: false, // This is the final state
+            badge: codingAgentDone ? { label: "READY", className: "badge badge-primary" } : undefined,
+            action: codingAgentDone
+              ? {
+                  href: `/projects/${pid}/merge`,
+                  label: "Review & Merge",
+                  primary: true,
+                }
+              : undefined,
+            hint: !codingAgentDone ? "Requires completed Coding Agent execution" : undefined,
+          };
+        default:
+          return { done: false };
     }
   }
 
