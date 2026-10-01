@@ -102,6 +102,14 @@ export const FailureClassificationSchema = z.enum([
 ]);
 export type FailureClassification = z.infer<typeof FailureClassificationSchema>;
 
+export const GitStateSchema = z.object({
+  branch: z.string(),
+  head: z.string(),
+  status: z.string(),
+  changed_files: z.array(z.string()),
+});
+export type GitState = z.infer<typeof GitStateSchema>;
+
 export const CodingAgentSessionSchema = z.object({
   id: z.string(),
   project_id: z.string(),
@@ -110,6 +118,8 @@ export const CodingAgentSessionSchema = z.object({
   workspace_id: z.string().optional().nullable(),
   source_document_ids: SourceDocumentIdsSchema,
   initial_workspace_fingerprint: z.string().optional().nullable(),
+  initial_git_state: GitStateSchema.optional().nullable(),
+  current_git_state: GitStateSchema.optional().nullable(),
   current_task_id: z.string().optional().nullable(),
   current_step: z.string().optional().nullable(),
   last_activity_at: z.string().optional().nullable(),
@@ -134,6 +144,10 @@ export const CodingAgentTaskSchema = z.object({
   attempt: z.number().default(0),
   files_expected: z.array(z.string()).default([]),
   files_changed: z.array(FileChangeSchema).default([]),
+  before_head: z.string().optional().nullable(),
+  after_head: z.string().optional().nullable(),
+  commit_hash: z.string().optional().nullable(),
+  git_diff_hash: z.string().optional().nullable(),
   validation_status: z.array(ValidationResultSchema).optional().nullable(),
   error: ExecutionErrorSchema.optional().nullable(),
   created_at: z.string(),

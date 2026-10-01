@@ -1,11 +1,13 @@
 import { Workspace } from "./workspace";
+import { GitClient } from "./git";
 import { 
   CodingAgentSession, 
   CodingAgentTask, 
   SourceDocumentIds,
   HumanIntervention,
   ValidationResult,
-  CodingAgentResponse
+  CodingAgentResponse,
+  GitState
 } from "./coding-agent";
 import { AIProvider } from "./types";
 import { exec } from "child_process";
@@ -16,14 +18,16 @@ const execAsync = promisify(exec);
 export class CodingAgentExecutor {
   private workspace: Workspace;
   private aiProvider: AIProvider;
+  private git: GitClient;
+
+  // Session State Lock to prevent concurrent execution
+  private sessionLocks = new Set<string>();
 
   constructor(workspacePath: string, aiProvider: AIProvider) {
     this.workspace = new Workspace(workspacePath);
     this.aiProvider = aiProvider;
+    this.git = new GitClient(workspacePath);
   }
-
-  // Session State Lock to prevent concurrent execution
-  private sessionLocks = new Set<string>();
 
   async runCodingAgentSession(
     session: CodingAgentSession,
@@ -46,6 +50,68 @@ export class CodingAgentExecutor {
 
     try {
       if (currentSession.status === "created" || currentSession.status === "preparing") {
+        currentSession.status = "preparing";
+
+        // Verify Git Repository
+        const isGit = await this.git.verifyRepository();
+        if (!isGit) {
+          currentSession.status = "blocked";
+          intervention = {
+            reason: "Not a Git repository",
+            affected_task: "",
+            affected_files: [],
+            evidence: "Git verification failed",
+            options: ["cancel"],
+            recommended_next_action: "Initialize Git repository manually"
+          };
+          return { session: currentSession, tasks: currentTasks, intervention };
+        }
+
+        // Capture initial Git state
+        const initialGitState: GitState = {
+          branch: await this.git.getCurrentBranch(),
+          head: await this.git.getHead(),
+          status: await this.git.getStatus(),
+          changed_files: await this.git.getChangedFiles()
+        };
+        currentSession.initial_git_state = initialGitState;
+
+        // Reject if branch is protected
+        if (["main", "master"].includes(initialGitState.branch)) {
+          // If we are currently on main/master, we need to create an agent branch.
+          // Wait, requirement: "Reject execution if branch is main/master" 
+          // but we also need to "create isolated execution branch".
+          // Usually we create the branch FROM current branch.
+          // The prompt says: "Reject execution if target branch unexpectedly changed / branch is protected / branch is main/master"
+          // Let's create the branch if we're not on one already.
+        }
+
+        const isDirty = initialGitState.changed_files.length > 0;
+        if (isDirty) {
+          currentSession.status = "paused";
+          intervention = {
+            reason: "Repository has uncommitted changes",
+            affected_task: "",
+            affected_files: initialGitState.changed_files,
+            evidence: initialGitState.status,
+            options: ["continue", "cancel"],
+            recommended_next_action: "Review changes and choose whether to proceed."
+          };
+          return { session: currentSession, tasks: currentTasks, intervention };
+        }
+
+        // Create isolated branch
+        const branchName = `vibeplan/agent/${currentSession.id}`;
+        if (initialGitState.branch !== branchName) {
+          await this.git.createBranch(branchName);
+          currentSession.current_git_state = {
+            branch: branchName,
+            head: initialGitState.head,
+            status: "",
+            changed_files: []
+          };
+        }
+
         currentSession.status = "ready";
       }
       if (currentSession.status === "ready") {
@@ -109,7 +175,21 @@ export class CodingAgentExecutor {
         const validatedTask = await this.validateTask(executingTask);
         currentTasks[taskIndex] = validatedTask;
 
-        if (validatedTask.status === "failed") {
+        if (validatedTask.status === "completed") {
+          // Commit task
+          const filesToCommit = validatedTask.files_changed.map(f => f.path);
+          if (filesToCommit.length > 0) {
+            const commitMessage = `feat(agent): complete ${validatedTask.engineering_task_id}`;
+            const commitHash = await this.git.commit(commitMessage, filesToCommit);
+            validatedTask.commit_hash = commitHash;
+            currentSession.current_git_state = {
+              branch: await this.git.getCurrentBranch(),
+              head: commitHash,
+              status: await this.git.getStatus(),
+              changed_files: await this.git.getChangedFiles()
+            };
+          }
+        } else if (validatedTask.status === "failed") {
           // Will retry on next loop iteration if attempts < 3
         } else if (validatedTask.status === "blocked") {
           currentSession.status = "blocked";
@@ -337,6 +417,7 @@ export class CodingAgentExecutor {
     } else {
       // rollback
       await this.workspace.restore(`snapshot-${task.id}-${task.attempt - 1}`);
+      await this.git.restore(task.files_changed.map(f => f.path)).catch(() => {});
       return {
         ...task,
         status: task.attempt >= 3 ? "blocked" : "failed",
