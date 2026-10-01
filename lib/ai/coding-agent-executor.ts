@@ -22,6 +22,138 @@ export class CodingAgentExecutor {
     this.aiProvider = aiProvider;
   }
 
+  // Session State Lock to prevent concurrent execution
+  private sessionLocks = new Set<string>();
+
+  async runCodingAgentSession(
+    session: CodingAgentSession,
+    tasks: CodingAgentTask[],
+    context: Record<string, unknown>
+  ): Promise<{ session: CodingAgentSession; tasks: CodingAgentTask[]; intervention?: HumanIntervention }> {
+    if (this.sessionLocks.has(session.id)) {
+      throw new Error("409 SESSION_ALREADY_RUNNING");
+    }
+    
+    // Idempotency: skip if already completed
+    if (session.status === "completed" || session.status === "cancelled" || session.status === "blocked") {
+      return { session, tasks };
+    }
+
+    this.sessionLocks.add(session.id);
+    let currentSession = { ...session };
+    let currentTasks = [...tasks];
+    let intervention: HumanIntervention | undefined;
+
+    try {
+      if (currentSession.status === "created" || currentSession.status === "preparing") {
+        currentSession.status = "ready";
+      }
+      if (currentSession.status === "ready") {
+        currentSession.status = "running";
+      }
+
+      // Safety budget mock: max 50 tasks
+      let loopCount = 0;
+
+      while (currentSession.status === "running") {
+        loopCount++;
+        if (loopCount > 50) {
+          currentSession.status = "blocked";
+          currentSession.error = { code: "BUDGET_EXCEEDED", message: "Max tasks per session exceeded" };
+          break;
+        }
+
+        // Heartbeat update
+        currentSession.last_activity_at = new Date().toISOString();
+
+        const nextTask = this.getNextExecutableTask(currentTasks);
+        if (!nextTask) {
+          // No more eligible tasks. Check if all are completed.
+          const allCompleted = currentTasks.every(t => t.status === "completed");
+          if (allCompleted) {
+            // Final validation step mock
+            const finalPassed = true;
+            if (finalPassed) {
+              currentSession.status = "completed";
+              currentSession.completed_at = new Date().toISOString();
+            } else {
+              currentSession.status = "failed";
+            }
+          } else {
+            // Some tasks are blocked or stuck
+            currentSession.status = "blocked";
+          }
+          break;
+        }
+
+        currentSession.current_task_id = nextTask.id;
+        currentSession.current_step = "executing";
+
+        const execResult = await this.executeTask(currentSession, nextTask, context);
+        currentSession = execResult.session;
+        const executingTask = execResult.task;
+        intervention = execResult.intervention;
+        
+        const taskIndex = currentTasks.findIndex(t => t.id === executingTask.id);
+        currentTasks[taskIndex] = executingTask;
+
+        if (intervention || currentSession.status !== "running" || executingTask.status === "blocked" || executingTask.status === "failed") {
+          // If task failed, don't validate it. It will be picked up next loop or block session
+          if (executingTask.status === "blocked") {
+            currentSession.status = "blocked";
+          }
+          continue;
+        }
+
+        currentSession.current_step = "validating";
+        const validatedTask = await this.validateTask(executingTask);
+        currentTasks[taskIndex] = validatedTask;
+
+        if (validatedTask.status === "failed") {
+          // Will retry on next loop iteration if attempts < 3
+        } else if (validatedTask.status === "blocked") {
+          currentSession.status = "blocked";
+          break;
+        }
+      }
+    } finally {
+      this.sessionLocks.delete(session.id);
+    }
+
+    return { session: currentSession, tasks: currentTasks, intervention };
+  }
+
+  getNextExecutableTask(tasks: CodingAgentTask[]): CodingAgentTask | null {
+    const pendingTasks = tasks.filter(t => t.status === "pending" || t.status === "ready" || t.status === "failed");
+    if (pendingTasks.length === 0) return null;
+
+    const completedTaskIds = new Set(tasks.filter(t => t.status === "completed").map(t => t.engineering_task_id));
+    const blockedTaskIds = new Set(tasks.filter(t => t.status === "blocked").map(t => t.engineering_task_id));
+
+    const eligible = pendingTasks.filter(t => {
+      // 1. Dependency satisfied
+      for (const dep of t.dependencies) {
+        if (!completedTaskIds.has(dep)) {
+          // If a dependency is blocked, this should be blocked too, but for resolution we just skip it
+          return false;
+        }
+      }
+      return true;
+    });
+
+    if (eligible.length === 0) return null;
+
+    // Sort by phase order and implementation order
+    // We assume phases are naturally ordered or we can just sort by implementation_order as primary
+    eligible.sort((a, b) => {
+      if (a.phase !== b.phase) {
+        return a.phase.localeCompare(b.phase);
+      }
+      return a.implementation_order - b.implementation_order;
+    });
+
+    return eligible[0];
+  }
   async prepareSession(
     projectId: string, 
     userId: string, 
@@ -66,34 +198,48 @@ export class CodingAgentExecutor {
     }
 
     // AI Implementation
-    const aiResponse = await this.aiProvider.generateCodingAgentImplementation({
-      projectName: "vibeplan-project",
-      task: (context?.task || { 
-        id: task.engineering_task_id, 
-        title: task.title, 
-        description: "",
-        phase: task.phase,
-        module_id: "",
-        priority: "medium",
-        implementation_order: 1,
-        dependencies: [],
-        files_to_create: [],
-        files_to_modify: [],
-        files_to_delete: [],
-        completion_checks: [],
-        traceability: { source_requirements: [], source_architecture_modules: [] }
-      }) as any,
-      agentPackage: (context?.agentPackage || {}) as any,
-      designSystem: (context?.designSystem || {}) as any,
-      requirements: (context?.requirements || {}) as any,
-      architecture: (context?.architecture || {}) as any,
-      erd: (context?.erd || {}) as any,
-      dfd: (context?.dfd || {}) as any,
-      flowchart: (context?.flowchart || {}) as any,
-      blueprint: (context?.blueprint || {}) as any,
-      workspaceFiles: workspaceFiles as any[],
-      previousError: task.error?.message
-    });
+    let aiResponse: CodingAgentResponse;
+    try {
+      aiResponse = await this.aiProvider.generateCodingAgentImplementation({
+        projectName: "vibeplan-project",
+        task: (context?.task || { 
+          id: task.engineering_task_id, 
+          title: task.title, 
+          description: "",
+          phase: task.phase,
+          module_id: "",
+          priority: "medium",
+          implementation_order: 1,
+          dependencies: [],
+          files_to_create: [],
+          files_to_modify: [],
+          files_to_delete: [],
+          completion_checks: [],
+          traceability: { source_requirements: [], source_architecture_modules: [] }
+        }) as any,
+        agentPackage: (context?.agentPackage || {}) as any,
+        designSystem: (context?.designSystem || {}) as any,
+        requirements: (context?.requirements || {}) as any,
+        architecture: (context?.architecture || {}) as any,
+        erd: (context?.erd || {}) as any,
+        dfd: (context?.dfd || {}) as any,
+        flowchart: (context?.flowchart || {}) as any,
+        blueprint: (context?.blueprint || {}) as any,
+        workspaceFiles: workspaceFiles as any[],
+        previousError: task.error?.message
+      });
+    } catch (e: any) {
+      // AI Failure
+      return {
+        task: {
+          ...task,
+          status: task.attempt >= 2 ? "blocked" : "failed", // 3 attempts max (0, 1, 2)
+          attempt: task.attempt + 1,
+          error: { code: "AI_FAILURE", message: e.message }
+        },
+        session
+      };
+    }
 
     if (aiResponse.decision === "pause" || aiResponse.decision === "request_human") {
       const intervention: HumanIntervention = {

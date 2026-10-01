@@ -61,12 +61,46 @@ export const AgentDecisionSchema = z.object({
 export type AgentDecision = z.infer<typeof AgentDecisionSchema>;
 
 export const ExecutionSummarySchema = z.object({
-  tasks_completed: z.number(),
-  tasks_failed: z.number(),
-  files_changed: z.number(),
-  duration: z.number(),
+  total_tasks: z.number().default(0),
+  completed_tasks: z.number().default(0),
+  failed_tasks: z.number().default(0),
+  blocked_tasks: z.number().default(0),
+  total_attempts: z.number().default(0),
+  total_files_created: z.number().default(0),
+  total_files_modified: z.number().default(0),
+  total_files_deleted: z.number().default(0),
+  validation_passed: z.number().default(0),
+  validation_failed: z.number().default(0),
+  human_interventions: z.number().default(0),
+  execution_duration: z.number().default(0),
+  final_status: z.string().optional(),
 });
 export type ExecutionSummary = z.infer<typeof ExecutionSummarySchema>;
+
+export const SafetyBudgetsSchema = z.object({
+  max_tasks_per_session: z.number().default(50),
+  max_total_attempts: z.number().default(3),
+  max_file_changes_per_task: z.number().default(10),
+  max_files_per_prompt: z.number().default(10),
+  max_file_size: z.number().default(500000), // 500kb
+  max_context_size: z.number().default(100000), // 100k tokens approx
+  max_execution_time: z.number().default(3600000), // 1 hour
+  max_validation_time: z.number().default(300000), // 5 mins
+});
+export type SafetyBudgets = z.infer<typeof SafetyBudgetsSchema>;
+
+export const FailureClassificationSchema = z.enum([
+  "AI_FAILURE",
+  "PATCH_FAILURE",
+  "VALIDATION_FAILURE",
+  "WORKSPACE_CONFLICT",
+  "SECURITY_VIOLATION",
+  "SOURCE_MISMATCH",
+  "TIMEOUT",
+  "SYSTEM_FAILURE",
+  "HUMAN_REQUIRED"
+]);
+export type FailureClassification = z.infer<typeof FailureClassificationSchema>;
 
 export const CodingAgentSessionSchema = z.object({
   id: z.string(),
@@ -75,11 +109,14 @@ export const CodingAgentSessionSchema = z.object({
   status: z.enum(["created", "preparing", "ready", "running", "paused", "completed", "failed", "cancelled", "blocked"]),
   workspace_id: z.string().optional().nullable(),
   source_document_ids: SourceDocumentIdsSchema,
+  initial_workspace_fingerprint: z.string().optional().nullable(),
   current_task_id: z.string().optional().nullable(),
+  current_step: z.string().optional().nullable(),
+  last_activity_at: z.string().optional().nullable(),
   started_at: z.string().optional().nullable(),
   completed_at: z.string().optional().nullable(),
   error: ExecutionErrorSchema.optional().nullable(),
-  summary: z.string().optional().nullable(),
+  summary: ExecutionSummarySchema.optional().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -91,6 +128,7 @@ export const CodingAgentTaskSchema = z.object({
   engineering_task_id: z.string(),
   title: z.string(),
   phase: z.string(),
+  implementation_order: z.number().default(0),
   status: z.enum(["pending", "ready", "running", "validating", "completed", "failed", "blocked", "cancelled"]),
   dependencies: z.array(z.string()).default([]),
   attempt: z.number().default(0),
